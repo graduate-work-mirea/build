@@ -39,6 +39,30 @@ services:
       - app-network
     restart: unless-stopped
 
+  data-processor-service:
+    build:
+      context: ../data-processor-service
+      dockerfile: Dockerfile
+    container_name: data-processor-service
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
+      - DATA_QUEUE_NAME=marketplace_data
+      - DATA_PATH=/app/data
+      - SCRIPTS_PATH=/app/scripts
+      - PYTHON_PATH=python
+      - CUTOFF_DATE=2025-03-20
+      - BATCH_SIZE=1000
+      - CONSUME_TIMEOUT_SECONDS=60
+      - SCHEDULER_INTERVAL_HOURS=24
+    volumes:
+      - ../data-processor-service/data:/app/data
+    networks:
+      - app-network
+    restart: unless-stopped
+
 networks:
   app-network:
     driver: bridge
