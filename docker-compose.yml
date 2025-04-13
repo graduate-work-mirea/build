@@ -54,7 +54,7 @@ services:
       - SCRIPTS_PATH=/app/scripts
       - PYTHON_PATH=python
       - CUTOFF_DATE=2025-03-20
-      - BATCH_SIZE=1000
+      - BATCH_SIZE=5000
       - CONSUME_TIMEOUT_SECONDS=60
       - SCHEDULER_INTERVAL_HOURS=24
     volumes:
