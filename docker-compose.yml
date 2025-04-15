@@ -20,6 +20,26 @@ services:
     networks:
       - app-network
 
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=marketplace_data
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+    restart: unless-stopped
+
   data-collector-service:
     build:
       context: ../data-collector-service
@@ -47,6 +67,8 @@ services:
     depends_on:
       rabbitmq:
         condition: service_healthy
+      postgres:
+        condition: service_healthy
     environment:
       - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
       - DATA_QUEUE_NAME=marketplace_data
@@ -57,8 +79,54 @@ services:
       - BATCH_SIZE=5000
       - CONSUME_TIMEOUT_SECONDS=60
       - SCHEDULER_INTERVAL_HOURS=24
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB_NAME=marketplace_data
+      - POSTGRES_SSL_MODE=disable
     volumes:
-      - ../data-processor-service/data:/app/data
+      - ./processor_data:/app/data
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  ml-service:
+    build:
+      context: ../ML-service
+      dockerfile: Dockerfile
+    container_name: ml-service
+    depends_on:
+      - data-processor-service
+      - postgres
+    environment:
+      - SERVER_PORT=8080
+      - MODEL_PATH=/app/models
+      - PROCESSED_DATA_PATH=/app/processor_data/processed
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=marketplace_data
+      - POSTGRES_SSLMODE=disable
+    volumes:
+      - ./processor_data:/app/processor_data
+      - ./models:/app/models
+    ports:
+      - "6785:8080"
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  ui-service:
+    build:
+      context: ../ui-service
+      dockerfile: Dockerfile
+    container_name: ui-service
+    ports:
+      - "80:80"
+    depends_on:
+      - ml-service
     networks:
       - app-network
     restart: unless-stopped
@@ -69,4 +137,6 @@ networks:
 
 volumes:
   rabbitmq_data:
+    driver: local
+  postgres_data:
     driver: local
