@@ -100,7 +100,7 @@ services:
       - data-processor-service
       - postgres
     environment:
-      - SERVER_PORT=8080
+      - SERVER_PORT=8081
       - MODEL_PATH=/app/models
       - PROCESSED_DATA_PATH=/app/processor_data/processed
       - POSTGRES_HOST=postgres
@@ -113,7 +113,7 @@ services:
       - ./processor_data:/app/processor_data
       - ./models:/app/models
     ports:
-      - "6785:8080"
+      - "6785:8081"
     networks:
       - app-network
     restart: unless-stopped
@@ -127,6 +127,54 @@ services:
       - "80:80"
     depends_on:
       - ml-service
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  auth-service:
+    build:
+      context: ../auth-service
+      dockerfile: Dockerfile
+    container_name: auth-service
+    ports:
+      - "8080:8080"
+      - "50051:50051"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - POSTGRES_DSN=postgres://postgres:postgres@postgres:5432/marketplace_data?sslmode=disable
+      - JWT_SECRET=your_secret_key_here
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  api-gateway:
+    build:
+      context: ../api-gateway
+      dockerfile: Dockerfile
+    container_name: api-gateway
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+      - auth-service
+      - ml-service
+    environment:
+      - JWT_SECRET=your_secret_key_here
+      - SERVER_PORT=8000
+      - AUTH_SERVICE_HOST=auth-service
+      - AUTH_SERVICE_PORT=8080
+      - ML_SERVICE_HOST=ml-service
+      - ML_SERVICE_PORT=8081
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=marketplace_data
+      - POSTGRES_SSLMODE=disable
+      - CACHE_SIZE=1000
+      - CORS_ORIGIN=http://localhost
     networks:
       - app-network
     restart: unless-stopped

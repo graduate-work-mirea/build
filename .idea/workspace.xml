@@ -6,11 +6,18 @@
   <component name="ChangeListManager">
     <list default="true" id="9aeb11c1-c5eb-493d-8417-f2177bd06a95" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/price_model.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/models/price_model.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/sales_model.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/models/sales_model.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/processor_data/processed/test_data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/processor_data/processed/test_data.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/processor_data/processed/train_data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/processor_data/processed/train_data.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processor_data/raw/marketplace_data_20250415_122626.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processor_data/raw/marketplace_data_20250415_122806.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processor_data/raw/marketplace_data_20250415_124939.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processor_data/raw/marketplace_data_20250415_125633.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processor_data/raw/marketplace_data_20250415_165827.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processor_data/raw/marketplace_data_20250415_170249.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processor_data/raw/marketplace_data_20250415_170731.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processor_data/raw/marketplace_data_20250415_175304.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processor_data/raw/marketplace_data_20250415_181559.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processor_data/raw/marketplace_data_20250415_182518.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processor_data/raw/marketplace_data_20250415_184026.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processor_data/raw/marketplace_data_20250415_184909.json" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
